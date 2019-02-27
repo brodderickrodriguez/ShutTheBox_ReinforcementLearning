@@ -3,8 +3,6 @@
 # 26 Feb. 2019
 
 import gym
-# from gym import error, spaces, utils
-# from gym.utils import seeding
 import numpy as np
 import shut_the_box_env.envs
 
@@ -22,37 +20,27 @@ class ShutTheBoxEnv(gym.Env):
         die2 = np.random.randint(1, 6 + 1)
         return die1 + die2
 
-    def roll_and_get_possible_actions(self):
-        s = self.roll_dice_get_sum()
-        return self.action_space.get_actions_for_roll(s)
-
     def hash_tiles_and_roll_to_string(self, roll):
-        s = ''
-        for tile in self.tiles:
-            s += str(tile)
-        return s + str(roll).zfill(2)
+        return ''.join([str(tile) for tile in self.tiles]) + str(roll).zfill(2)
 
     def step(self, action):
         if type(action) != list:
             raise TypeError('action is not a list')
 
         for tile_index in list(action):
-            # if self.tiles[tile_index - 1] == 0:
-            #     raise ValueError('tile {t} is already down'.format(t=tile_index))
+            if self.tiles[tile_index - 1] == 0:
+                raise ValueError('tile {tile} is already down'.format(tile=tile_index))
 
             self.tiles[tile_index - 1] = 0
 
-        # TODO: not sure if there is a bug here or not
-        # 'done' is based off of next roll by design
-        # could cause problems
-        # usual gym implementation this isn't the case
-        # game over might need to happen after that action is taken
         next_roll = self.roll_dice_get_sum()
+        observation_string = self.hash_tiles_and_roll_to_string(next_roll)
         done = self.check_game_over(next_roll)
         reward = self.get_reward_for_current_state(done)
-        observation_string = self.hash_tiles_and_roll_to_string(next_roll)
+        won = 1 if sum(self.tiles) == 0 else 0
 
-        return observation_string, reward, done, {'next_roll': next_roll}
+        # return tuple: (observation: string, reward: double, done: boolean, info: dict)
+        return observation_string, reward, done, {'next_roll': next_roll, 'win': won}
 
     def get_reward_for_current_state(self, game_over):
         if sum(self.tiles) == 0:

@@ -4,8 +4,8 @@
 
 from ShutTheBox import ReinforcementAlgorithm
 
-GAMMA = 0.99
+GAMMA = 0.90
 
-ALPHA = 0.05
+ALPHA = 0.01
 
 ra = ReinforcementAlgorithm.QAlgorithm()
