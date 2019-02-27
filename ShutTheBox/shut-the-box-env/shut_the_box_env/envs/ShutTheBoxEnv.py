@@ -7,32 +7,15 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 import numpy as np
 
+import shut_the_box_env.envs
 
-class ActionSpace:
-    def __init__(self):
-        self.actions = self.get_all_possible_actions()
-
-    @staticmethod
-    def get_all_possible_actions():
-        actions = []
-        for n in range(1, 12 + 1):
-            actions.append([[i, n - i] if i != n else [n] for i in range(1, n + 1)])
-        return actions
-
-    def sample(self, n):
-        possible_actions = self.get_actions_for_roll(n)
-        random_action_index = np.random.randint(0, len(possible_actions))
-        return possible_actions[random_action_index]
-
-    def get_actions_for_roll(self, n):
-        return self.actions[n - 1]
 
 
 class ShutTheBoxEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):
-        self.action_space = ActionSpace()
+        self.action_space = shut_the_box_env.envs.ActionSpace.ActionSpace()
         self.tiles = self._generate_clean_tiles()
 
     @staticmethod
@@ -49,7 +32,7 @@ class ShutTheBoxEnv(gym.Env):
         s = ''
         for tile in self.tiles:
             s += str(tile)
-        return s + str(roll)
+        return s + str(roll).zfill(2)
 
     def step(self, action):
         if type(action) != list:
@@ -58,8 +41,8 @@ class ShutTheBoxEnv(gym.Env):
         for tile_index in list(action):
             self.tiles[tile_index - 1] = 0
 
-        # not sure if there is a bug here or not
-        # done is based off of next roll by design
+        # TODO: not sure if there is a bug here or not
+        # 'done' is based off of next roll by design
         # could cause problems
         # usual gym implementation this isn't the case
         # game over might need to happen after that action is taken
@@ -88,12 +71,29 @@ class ShutTheBoxEnv(gym.Env):
 
         return True
 
+    def get_possible_actions_for_roll(self, roll):
+        all_possible_actions = self.action_space.get_actions_for_roll(roll=roll)
+        possible_actions = []
+
+        for action in all_possible_actions:
+            tile_down = False
+            for tile in action:
+                if self.tiles[tile - 1] == 0:
+                    tile_down = True
+                    break
+
+            if not tile_down:
+                possible_actions.append(action)
+
+        return possible_actions
+
     @staticmethod
     def _generate_clean_tiles():
         return [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
     def reset(self):
         self.tiles = self._generate_clean_tiles()
+        return self.hash_tiles_and_roll_to_string(0)
 
     def render(self, mode='human', close=False):
         pass
