@@ -3,12 +3,10 @@
 # 26 Feb. 2019
 
 import gym
-from gym import error, spaces, utils
-from gym.utils import seeding
+# from gym import error, spaces, utils
+# from gym.utils import seeding
 import numpy as np
-
 import shut_the_box_env.envs
-
 
 
 class ShutTheBoxEnv(gym.Env):
@@ -39,6 +37,9 @@ class ShutTheBoxEnv(gym.Env):
             raise TypeError('action is not a list')
 
         for tile_index in list(action):
+            # if self.tiles[tile_index - 1] == 0:
+            #     raise ValueError('tile {t} is already down'.format(t=tile_index))
+
             self.tiles[tile_index - 1] = 0
 
         # TODO: not sure if there is a bug here or not
@@ -51,7 +52,7 @@ class ShutTheBoxEnv(gym.Env):
         reward = self.get_reward_for_current_state(done)
         observation_string = self.hash_tiles_and_roll_to_string(next_roll)
 
-        return observation_string, reward, done, {}
+        return observation_string, reward, done, {'next_roll': next_roll}
 
     def get_reward_for_current_state(self, game_over):
         if sum(self.tiles) == 0:
@@ -61,18 +62,10 @@ class ShutTheBoxEnv(gym.Env):
         return -0.1
 
     def check_game_over(self, next_roll):
-        possible_next_actions = self.action_space.get_actions_for_roll(next_roll)
+        return len(self.get_possible_actions_for_roll(next_roll)) == 0
 
-        for action_pair in possible_next_actions:
-            tiles_up = [self.tiles[action_tile - 1] for action_tile in action_pair]
-
-            if sum(tiles_up) == len(action_pair):
-                return False
-
-        return True
-
-    def get_possible_actions_for_roll(self, roll):
-        all_possible_actions = self.action_space.get_actions_for_roll(roll=roll)
+    def get_possible_actions_for_roll(self, roll_sum):
+        all_possible_actions = self.action_space.get_actions_for_roll_sum(roll_sum=roll_sum)
         possible_actions = []
 
         for action in all_possible_actions:
