@@ -9,13 +9,18 @@ import numpy as np
 import itertools
 from ShutTheBox.agent import Configuration as Config
 import shut_the_box_env.envs.ShutTheBoxEnv
+import ShutTheBox.agent.ReadWrite as rw
 
 
 # Our decision making entity
 class Agent:
-    def __init__(self):
+    def __init__(self, json_file=None):
         self.env = gym.make('shut_the_box_env-v0')
-        self.q_table = QTable.build(self.env)
+
+        if json_file is None:
+            self.q_table = QTable.build(self.env)
+        else:
+            self.q_table = rw.read_q_func(json_file)
 
     # returns a dictionary of possible actions with their corresponding values given a state and roll sum
     def get_possible_next_actions(self, next_state, roll_sum):
@@ -105,7 +110,8 @@ class Agent:
         while True:
             # increment episodes and set a new epsilon for next episode
             episode += 1
-            epsilon = 100 / np.sqrt(episode + 1)
+            # epsilon = 100 / np.sqrt(episode + 1)
+            epsilon = epoch_length / np.sqrt(episode + 1)
 
             # perform an experiment and grab stats about how the agent performed
             reward, print_string, win = self.run_single_episode(episode_number=episode,
@@ -142,6 +148,7 @@ class Agent:
                                                     epsilon=epsilon)
 
                 print(best_episode + '\n' + s + '\n')
+                rw.write_q_func(self.q_table, './agent/models/model.json')
 
 
 # A static class which builds a q table and converts action strings to action lists and vise versa
