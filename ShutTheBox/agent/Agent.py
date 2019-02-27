@@ -2,10 +2,12 @@
 # Auburn University - CSSE
 # 26 Feb. 2019
 
+# pycharm seems to want to delete this necessary import statement
+# import shut_the_box_env.envs.ShutTheBoxEnv
 import gym
 import numpy as np
 import itertools
-from ShutTheBox import Configuration as Config
+from ShutTheBox.agent import Configuration as Config
 import shut_the_box_env.envs.ShutTheBoxEnv
 
 

@@ -3,7 +3,7 @@
 # 26 Feb. 2019
 
 import numpy as np
-from ShutTheBox import Configuration as Config
+from ShutTheBox.agent import Configuration as Config
 import operator
 import random
 
