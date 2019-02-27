@@ -4,14 +4,15 @@
 
 import gym
 import numpy as np
-import shut_the_box_env.envs
+from .ActionSpace import ActionSpace
 
 
+# The Shut The Box Environment
 class ShutTheBoxEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):
-        self.action_space = shut_the_box_env.envs.ActionSpace.ActionSpace()
+        self.action_space = ActionSpace()
         self.tiles = self._generate_clean_tiles()
 
     @staticmethod
