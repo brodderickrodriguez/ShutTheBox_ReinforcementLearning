@@ -8,15 +8,20 @@ import ShutTheBox.agent.Agent as agnt
 import ShutTheBox.agent.ReadWrite as rw
 
 
+Q_TABLE = '/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBox/agent/models/model.json'
+# Q_TABLE = './agent/models/model.json'
+
+
 def train_single_agent():
-	agent = agnt.Agent()
+	agent = agnt.Agent(Q_TABLE)
 	agent.learn()
-	rw.blend_and_save_q_fucs(agent.q_table, './agent/models/model.json')
+	rw.blend_and_save_q_fucs(agent.q_table, Q_TABLE)
 
 
 def train(n):
 	thread_lock = threading.Lock()
 	threads = []
+	agents = []
 
 	while True:
 		for n in range(10):
@@ -26,3 +31,5 @@ def train(n):
 
 		for thread in threads:
 			thread.join()
+
+		threads = threads[:10]

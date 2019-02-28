@@ -6,6 +6,9 @@
 
 import sys
 
+sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning')
+sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBox/shut-the-box-env')
+
 sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL')
 sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/shut-the-box-env')
 
