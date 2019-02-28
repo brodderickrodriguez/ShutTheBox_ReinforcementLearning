@@ -10,9 +10,10 @@ sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL')
 sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/shut-the-box-env')
 
 import ShutTheBox.agent.Agent as agnt
+import ShutTheBox.agent.ReadWrite as rw
+import MultiThreadTrain as multiThread
 
 
 if __name__ == '__main__':
     print('welcome Shut The Box')
-    agent = agnt.Agent()
-    agent.learn()
+    multiThread.train(10)

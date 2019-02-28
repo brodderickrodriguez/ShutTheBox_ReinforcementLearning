@@ -107,11 +107,11 @@ class Agent:
         epoch_length = 10000
 
         # continue training forever...
-        while True:
+        while episode <= epoch_length:
             # increment episodes and set a new epsilon for next episode
             episode += 1
             # epsilon = 100 / np.sqrt(episode + 1)
-            epsilon = epoch_length / np.sqrt(episode + 1)
+            epsilon = 1 / np.sqrt(episode)
 
             # perform an experiment and grab stats about how the agent performed
             reward, print_string, win = self.run_single_episode(episode_number=episode,
@@ -148,7 +148,6 @@ class Agent:
                                                     epsilon=epsilon)
 
                 print(best_episode + '\n' + s + '\n')
-                rw.write_q_func(self.q_table, './agent/models/model.json')
 
 
 # A static class which builds a q table and converts action strings to action lists and vise versa
