@@ -13,7 +13,7 @@ Q_TABLE = '/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBo
 
 
 def train_single_agent():
-	agent = agnt.Agent(Q_TABLE)
+	agent = agnt.Agent()
 	agent.learn()
 	rw.blend_and_save_q_fucs(agent.q_table, Q_TABLE)
 
