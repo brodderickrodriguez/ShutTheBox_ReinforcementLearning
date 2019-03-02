@@ -7,6 +7,7 @@ import json
 
 write_flag = False
 
+
 def read_q_func(f_name):
 	while write_flag:
 		pass

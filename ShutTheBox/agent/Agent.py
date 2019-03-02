@@ -111,7 +111,7 @@ class Agent:
             # increment episodes and set a new epsilon for next episode
             episode += 1
             # epsilon = 100 / np.sqrt(episode + 1)
-            epsilon = 1 / np.sqrt(episode)
+            epsilon = 2 / np.sqrt(episode)
 
             # perform an experiment and grab stats about how the agent performed
             reward, print_string, win = self.run_single_episode(episode_number=episode,
@@ -203,12 +203,12 @@ class QTable:
 class PrintStrings:
     @staticmethod
     def build_episode_string(episode, actions, step_count, reward, tiles):
-        return 'episode {i}:\n\t''actions:\t{a}\n\tstep_count:\t{sc}\n\ttiles:\t{et}\n\ttotal_reward:\t{tr}' \
+        return 'episode {i}:\n\t''actions:\t\t{a}\n\tstep_count:\t\t{sc}\n\ttiles:\t\t\t{et}\n\ttotal_reward:\t{tr}' \
             .format(i=episode, a=actions, sc=step_count, tr=reward, et=tiles)
 
     @staticmethod
     def build_epoch_string(epoch, episode, wins, epoch_wins, total_win_ratio, epoch_win_ratio, epsilon):
-        return 'epoch {a} episode {b}:\n\ttotal wins {c}\n\tepoch wins {d}\n\ttotal win ratio {e}' \
-               '\n\tepoch win ratio {f}\n\tepsilon {g}'.format(
+        return 'epoch {a} episode {b}:\n\ttotal wins\t\t{c}\n\tepoch wins \t\t{d}\n\ttotal win ratio {e}' \
+               '\n\tepoch win ratio {f}\n\tepsilon\t\t\t{g}'.format(
                 a=epoch, b=episode, c=wins, d=epoch_wins, e=total_win_ratio, f=epoch_win_ratio,
                 g=epsilon)
