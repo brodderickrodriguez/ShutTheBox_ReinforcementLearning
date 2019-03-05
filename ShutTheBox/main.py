@@ -5,35 +5,30 @@
 
 
 import sys
+import ShutTheBox.MultiProcessTrain as mpt
 
 
-# for hopper cluster
-sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning')
-sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBox/shut-the-box-env')
+def handle_relative_imports():
+    # for hopper cluster
+    sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning')
+    sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBox/shut-the-box-env')
 
-# for bcr local
-sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL')
-sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/shut-the-box-env')
-
-import ShutTheBox.agent.Agent as agnt
-import ShutTheBox.agent.ReadWrite as rw
-import MultiThreadTrain as multiThread
+    # for bcr local
+    sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL')
+    sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/shut-the-box-env')
 
 
 if __name__ == '__main__':
     print('welcome Shut The Box')
-    # multiThread.train(10)
+    handle_relative_imports()
 
+    # 100,000
+    train_iterations = int(5)
+    processes = 2
 
-    train_iterations = int(1e8)
+    train = mpt.MultiProcessTrain()
+    train.train_agents(processes_count=processes, iterations=train_iterations)
 
-    multiThread.train(train_iterations)
-
-
-
-
-
-    # model_path = '/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/agent/models/model.json'
-    #
-    # a = agnt.Agent(model_path)
-    # a.learn()
+    # each agent plays 10,000 games in one epoch
+    # multiplied by the number of train iterations
+    # multiplied by the number of processes

@@ -27,4 +27,5 @@ class QAlgorithm:
 
     # gets the new q value for a state-action pair Q(s, a)
     def get_new_q_value(self, q, state, action, next_reward, next_state):
-        return Config.ALPHA * (next_reward + Config.GAMMA * self.value(q=q, state=next_state) - q[state][action])
+        return ((1 - Config.ALPHA) * q[state][action]) + \
+               (Config.ALPHA * (next_reward + (Config.GAMMA * QAlgorithm.value(q, next_state))))

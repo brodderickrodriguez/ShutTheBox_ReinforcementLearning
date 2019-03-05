@@ -9,7 +9,6 @@ import numpy as np
 import itertools
 from ShutTheBox.agent import Configuration as Config
 import shut_the_box_env.envs.ShutTheBoxEnv
-import ShutTheBox.agent.ReadWrite as rw
 
 
 # Our decision making entity
@@ -20,7 +19,7 @@ class Agent:
         if json_file is None:
             self.q_table = QTable.build(self.env)
         else:
-            self.q_table = rw.read_q_func(json_file)
+            self.q_table = Config.rw.read_q_table(json_file)
 
     # returns a dictionary of possible actions with their corresponding values given a state and roll sum
     def get_possible_next_actions(self, next_state, roll_sum):

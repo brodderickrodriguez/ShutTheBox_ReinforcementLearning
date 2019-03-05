@@ -3,6 +3,7 @@
 # 26 Feb. 2019
 
 from ShutTheBox.agent import ReinforcementAlgorithm
+from ShutTheBox.agent import ReadWrite
 
 # learning rate
 ALPHA = 0.01
@@ -12,3 +13,5 @@ GAMMA = 0.90
 
 # initialize our RL algorithm of choice
 ra = ReinforcementAlgorithm.QAlgorithm()
+
+rw = ReadWrite.ReadWrite()
