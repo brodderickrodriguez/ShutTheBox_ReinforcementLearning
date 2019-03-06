@@ -26,6 +26,7 @@ class QAlgorithm:
             return max(possible_actions.items(), key=operator.itemgetter(1))[0]
 
     # gets the new q value for a state-action pair Q(s, a)
+
     def get_new_q_value(self, q, state, action, next_reward, next_state):
         return ((1 - Config.ALPHA) * q[state][action]) + \
                (Config.ALPHA * (next_reward + (Config.GAMMA * QAlgorithm.value(q, next_state))))

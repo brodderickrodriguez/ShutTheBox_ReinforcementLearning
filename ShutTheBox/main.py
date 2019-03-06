@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     # 100,000
     train_iterations = int(5)
-    processes = 2
+    processes = 1
 
     train = mpt.MultiProcessTrain()
     train.train_agents(processes_count=processes, iterations=train_iterations)
