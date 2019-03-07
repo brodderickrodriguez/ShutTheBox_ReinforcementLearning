@@ -5,6 +5,7 @@
 import gym
 import numpy as np
 from .ActionSpace import ActionSpace
+from .EnvironmentConfiguration import env_config
 
 
 # The Shut The Box Environment
@@ -18,9 +19,9 @@ class ShutTheBoxEnv(gym.Env):
     # roll two dice and return their sum
     @staticmethod
     def roll_dice_get_sum():
-        die1 = np.random.randint(1, 6 + 1)
-        die2 = np.random.randint(1, 6 + 1)
-        return die1 + die2
+        s = sum([np.random.randint(env_config.dice_range[0], env_config.dice_range[1] + 1)
+                 for _ in range(env_config.number_of_dice)])
+        return s
 
     # generates a string 'bbbbbbbbbbbbdd', b is binary bit, d is roll sum
     # to hash the current environment state to a string

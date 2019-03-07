@@ -7,7 +7,7 @@
 import gym
 import numpy as np
 import itertools
-from ShutTheBox.agent import Configuration as Config
+from ShutTheBox.agent import AgentConfiguration as Config
 import shut_the_box_env.envs.ShutTheBoxEnv
 
 

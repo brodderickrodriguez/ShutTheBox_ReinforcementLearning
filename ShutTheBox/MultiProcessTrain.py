@@ -4,7 +4,7 @@
 
 from multiprocessing import Process
 import ShutTheBox.agent.Agent as agnt
-from ShutTheBox.agent import Configuration as Config
+from ShutTheBox.agent import AgentConfiguration as Config
 
 
 class MultiProcessTrain:

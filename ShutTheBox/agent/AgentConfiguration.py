@@ -22,7 +22,13 @@ rw = ReadWrite.ReadWrite()
 manager = AgentManager.AgentManager()
 
 
-
+def add_relative_directory_paths():
+    if BuildConfiguration.get_configuration() == BuildConfiguration.LOCAL:
+        sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL')
+        sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/shut-the-box-env')
+    else:
+        sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning')
+        sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBox/shut-the-box-env')
 
 
 def get_q_table_path():
@@ -42,3 +48,5 @@ class BuildConfiguration(Enum):
             return BuildConfiguration.LOCAL
         else:
             return BuildConfiguration.HOPPER
+
+

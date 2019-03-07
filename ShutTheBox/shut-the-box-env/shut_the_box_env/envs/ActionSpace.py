@@ -3,15 +3,16 @@
 # 26 Feb. 2019
 
 import random
+from .EnvironmentConfiguration import env_config
 
 
 # A class which helps us maintain our action space given states or roll sums
 class ActionSpace:
     def __init__(self):
         # the ranges for tiles in Shut The Box, the possible values of dice, and all possible roll sums given two dice
-        self.tile_range = (1, 12)
-        self.dice_range = (1, 6)
-        self.dice_sum_range = (2, 12)
+        self.tile_range = env_config.tile_range
+        self.dice_range = env_config.dice_range
+        self.dice_sum_range = env_config.dice_sum_range
 
     # generates all possible rolls of two dice
     def _get_all_possible_rolls(self):
@@ -41,6 +42,7 @@ class ActionSpace:
     # computes the possible actions we can take given a roll sum
     def get_actions_for_roll_sum(self, roll_sum):
         if roll_sum < self.dice_sum_range[0] or roll_sum > self.dice_sum_range[1]:
+            print(self.dice_sum_range, roll_sum)
             raise ValueError('roll sum must be in range [2, 12]')
 
         return [action for action in self.get_all_possible_tile_combinations() if sum(action) == roll_sum]
