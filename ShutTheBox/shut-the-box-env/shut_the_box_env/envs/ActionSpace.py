@@ -15,21 +15,18 @@ class ActionSpace:
         self.dice_sum_range = env_config.dice_sum_range
 
     # generates all possible rolls of two dice
-    # def _get_all_possible_rolls(self):
-    #     # this list comprehension avoids duplicate roles. i.e. (1, 6) = (6, 1) here
-    #     rolls = [[j, i] if j > 0 else [i]
-    #              for i in range(self.dice_range[0], self.dice_range[1] + 1)
-    #              for j in range(self.dice_range[0], i + 1)]
-    #
-    #     rolls.sort()
-    #     print(rolls)
-    #
-    #     return rolls
-
+    # TODO: clean this up
     def _get_all_possible_rolls(self):
-        rolls = [[i] for i in range(self.dice_range[0], self.dice_range[1] + 1)]
+        if env_config.dice_sum_range == (2, 12):
+            # this list comprehension avoids duplicate roles. i.e. (1, 6) = (6, 1) here
+            rolls = [[j, i] if j > 0 else [i]
+                     for i in range(self.dice_range[0], self.dice_range[1] + 1)
+                     for j in range(self.dice_range[0], i + 1)]
+        else:
+            rolls = [[i] for i in range(self.dice_range[0], self.dice_range[1] + 1)]
+
+        rolls.sort()
         return rolls
-        pass
 
     # generates a unique-item list of all possible roll sums given any roll of two dice
     def get_all_possible_roll_sums(self):
@@ -49,9 +46,7 @@ class ActionSpace:
     # computes the possible actions we can take given a roll sum
     def get_actions_for_roll_sum(self, roll_sum):
         if roll_sum < self.dice_sum_range[0] or roll_sum > self.dice_sum_range[1]:
-            print(self.dice_sum_range, roll_sum)
-            raise ValueError('roll sum must be in range {r}'.format(r=self.dice_sum_range))
-
+            raise ValueError('roll sum {s} must be in range {r}'.format(s=roll_sum, r=self.dice_sum_range))
         return [action for action in self.get_all_possible_tile_combinations() if sum(action) == roll_sum]
 
     # returns a random action to take given a roll sum. Used to perform the initial action

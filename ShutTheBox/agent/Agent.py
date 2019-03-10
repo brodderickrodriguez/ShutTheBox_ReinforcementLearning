@@ -7,7 +7,7 @@
 import gym
 import numpy as np
 import itertools
-from ShutTheBox.agent import AgentConfiguration as Config
+from ShutTheBox.agent import AgentConfiguration as agnt_config
 import shut_the_box_env.envs.ShutTheBoxEnv
 
 
@@ -19,7 +19,7 @@ class Agent:
         if json_file is None:
             self.q_table = QTable.build(self.env)
         else:
-            self.q_table = Config.rw.read_q_table(json_file)
+            self.q_table = agnt_config.rw.read_q_table(json_file)
 
     # returns a dictionary of possible actions with their corresponding values given a state and roll sum
     def get_possible_next_actions(self, next_state, roll_sum):
@@ -54,8 +54,6 @@ class Agent:
             # commit the action and get information from the environment
             next_state, reward, done, info = self.env.step(action=action)
 
-            print(next_state)
-
             # get the roll sum from the environment
             roll_sum = info['next_roll']
 
@@ -72,19 +70,19 @@ class Agent:
                                                               roll_sum=roll_sum)
 
             # get the next action from the Q Learning algorithm using epsilon-greedy sampling
-            next_action = Config.ra.next_action(possible_actions=possible_actions,
-                                                epsilon=epsilon)
+            next_action = agnt_config.ra.next_action(possible_actions=possible_actions,
+                                                     epsilon=epsilon)
 
             # convert our environments action list to a string to key into our q table dictionary
             action = QTable.action_list_to_string(action=action)
 
             # update our q table according to Q Learning
             # https://en.wikipedia.org/wiki/Q-learning
-            self.q_table[state][action] = Config.ra.get_new_q_value(q=self.q_table,
-                                                                    state=state,
-                                                                    action=action,
-                                                                    next_reward=reward,
-                                                                    next_state=next_state)
+            self.q_table[state][action] = agnt_config.ra.get_new_q_value(q=self.q_table,
+                                                                         state=state,
+                                                                         action=action,
+                                                                         next_reward=reward,
+                                                                         next_state=next_state)
 
             # update our state action by parsing the action string back to an action list
             state = next_state
@@ -104,51 +102,43 @@ class Agent:
     def learn(self):
         print('learning...')
         # initialize some variables used to compute performance metrics
-        episode, wins, win_ratio_list, best_episode, best_reward = 0, 0, [], None, float("-infinity")
-        epoch_length = 10000
+        # episode, wins, win_ratio_list, best_episode, best_reward = 0, 0, [], None, float("-infinity")
 
-        # continue training forever...
-        while episode <= epoch_length:
+        episode, number_wins, win_ratio, epsilon = 0.0, 0.0, 0.0, 0.0
+        best_episode, best_reward = None, float("-infinity")
+
+        # continue training...
+        while episode <= agnt_config.EPOCH_LENGTH:
             # increment episodes and set a new epsilon for next episode
             episode += 1
             # epsilon = 100 / np.sqrt(episode + 1)
             epsilon = 2 / np.sqrt(episode)
 
             # perform an experiment and grab stats about how the agent performed
-            reward, print_string, win = self.run_single_episode(episode_number=episode,
-                                                                epsilon=epsilon)
+            reward, print_string, win = self.run_single_episode(episode_number=episode, epsilon=epsilon)
 
             # increment wins accordingly
-            wins += win
-            win_ratio_list.append(win)
+            number_wins += win
 
             # if we set a new record for reward achieved, save it
             if reward >= best_reward:
                 best_episode, best_reward = print_string, reward
 
-            # if the epoch is over, compute performance metrics and print them
-            if episode % epoch_length == 0:
-                # sum the number of wins in this epoch and compute a win ratio
-                epoch_wins = sum(win_ratio_list)
-                win_ratio_list = win_ratio_list[epoch_length:]
-                epoch_win_ratio = epoch_wins / epoch_length
+            if episode % agnt_config.PRINT_FREQUENCY == 0:
+                cur_win_ratio = number_wins / episode
+                imp = cur_win_ratio - win_ratio
+                print('episode {e} win ratio: {w:0.4f} improvement: {i:0.7f}'.format(e=episode, w=cur_win_ratio, i=imp))
 
-                # compute the total wins for this agent in every episode
-                total_win_ratio = wins / episode
+            win_ratio = number_wins / episode
 
-                # get an epoch number
-                epoch = int(episode / epoch_length)
+        # build a print string to output our performance so far
+        s = PrintStrings.build_epoch_string(epoch=0,
+                                            epoch_wins=number_wins,
+                                            epoch_win_ratio=win_ratio,
+                                            epsilon=epsilon)
 
-                # build a print string to output our performance so far
-                s = PrintStrings.build_epoch_string(epoch=epoch,
-                                                    episode=episode,
-                                                    wins=wins,
-                                                    epoch_wins=epoch_wins,
-                                                    total_win_ratio=total_win_ratio,
-                                                    epoch_win_ratio=epoch_win_ratio,
-                                                    epsilon=epsilon)
-
-                print(best_episode + '\n' + s + '\n')
+        print(best_episode + '\n' + s + '\n')
+        return win_ratio
 
 
 # A static class which builds a q table and converts action strings to action lists and vise versa
@@ -212,8 +202,6 @@ class PrintStrings:
             .format(i=episode, a=actions, sc=step_count, tr=reward, et=tiles)
 
     @staticmethod
-    def build_epoch_string(epoch, episode, wins, epoch_wins, total_win_ratio, epoch_win_ratio, epsilon):
-        return 'epoch {a} episode {b}:\n\ttotal wins\t\t{c}\n\tepoch wins \t\t{d}\n\ttotal win ratio {e}' \
-               '\n\tepoch win ratio {f}\n\tepsilon\t\t\t{g}'.format(
-                a=epoch, b=episode, c=wins, d=epoch_wins, e=total_win_ratio, f=epoch_win_ratio,
-                g=epsilon)
+    def build_epoch_string(epoch, epoch_wins, epoch_win_ratio, epsilon):
+        return 'epoch {a}:\n\tepoch wins \t\t{d}\n\tepoch win ratio {f}\n\tepsilon\t\t\t{g}'.format(
+                a=epoch, d=epoch_wins, f=epoch_win_ratio, g=epsilon)

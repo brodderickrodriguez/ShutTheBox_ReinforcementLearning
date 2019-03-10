@@ -12,13 +12,14 @@ import sys
 
 
 def handle_relative_imports():
-    # for hopper cluster
-    sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning')
-    sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBox/shut-the-box-env')
-
-    # for bcr local
-    sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL')
-    sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/shut-the-box-env')
+    pass
+    # # for hopper cluster
+    # sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning')
+    # sys.path.append('/home/bcr0012/shut_the_box/ShutTheBox_ReinforcementLearning/ShutTheBox/shut-the-box-env')
+    #
+    # # for bcr local
+    # sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL')
+    # sys.path.append('/Users/bcr/Dropbox/PROJECTS/CODE/Python/ShutTheBoxRL/ShutTheBox/shut-the-box-env')
 
 
 def create_single_agent():

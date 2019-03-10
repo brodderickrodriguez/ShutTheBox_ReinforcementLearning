@@ -4,9 +4,9 @@
 
 import sys
 from enum import Enum
+import numpy as np
 from ShutTheBox.agent import ReinforcementAlgorithm
 from ShutTheBox.agent import ReadWrite
-from ShutTheBox.agent import AgentManager
 
 # learning rate
 ALPHA = 0.01
@@ -14,12 +14,19 @@ ALPHA = 0.01
 # discount factor
 GAMMA = 0.90
 
+EPOCH_LENGTH = 10
+
+PRINT_FREQUENCY = 1000
+
+
+def epsilon_func(e):
+    return 5 / np.sqrt(e)
+
+
 # initialize our RL algorithm of choice
 ra = ReinforcementAlgorithm.QAlgorithm()
 
 rw = ReadWrite.ReadWrite()
-
-manager = AgentManager.AgentManager()
 
 
 def add_relative_directory_paths():
@@ -39,8 +46,7 @@ def get_q_table_path():
 
 
 class BuildConfiguration(Enum):
-    LOCAL = 'local'
-    HOPPER = 'hopper'
+    LOCAL, HOPPER = 'local', 'hopper'
 
     @staticmethod
     def get_configuration():

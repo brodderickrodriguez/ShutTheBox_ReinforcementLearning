@@ -70,7 +70,7 @@ class ShutTheBoxEnv(gym.Env):
 
         # if we lose, we want a low reward
         if game_over:
-            return -10
+            return -5
 
         # otherwise, penalize the agent for taking another action
         return -0.1
@@ -106,7 +106,7 @@ class ShutTheBoxEnv(gym.Env):
     # a reset tile list contains all ones symbolizing each tile is still in the game
     @staticmethod
     def _generate_clean_tiles():
-        return [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        return [1 for _ in range(env_config.tile_range[1])]
 
     # resets the tiles and returns the initial state string: '11111111111100'
     def reset(self):
