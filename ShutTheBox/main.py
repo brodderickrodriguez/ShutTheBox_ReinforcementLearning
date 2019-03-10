@@ -22,9 +22,10 @@ def handle_relative_imports():
 
 
 def create_single_agent():
-    pass
-    # agent = agt.Agent()
-    # agent.learn()
+
+    from ShutTheBox.agent import Agent as agt
+    agent = agt.Agent()
+    agent.learn()
 
 
 if __name__ == '__main__':

@@ -54,6 +54,8 @@ class Agent:
             # commit the action and get information from the environment
             next_state, reward, done, info = self.env.step(action=action)
 
+            print(next_state)
+
             # get the roll sum from the environment
             roll_sum = info['next_roll']
 
@@ -164,8 +166,10 @@ class QTable:
         possible_role_sums = env.action_space.get_all_possible_roll_sums()
 
         # initialize a generic initial state. '...00' represents die roll value of 0
-        q_table = {'11111111111100': {QTable.action_list_to_string(action=action): 0.0
-                                      for action in env.action_space.get_all_possible_tile_combinations()}}
+        t = {QTable.action_list_to_string(action=action): 0.0
+             for action in env.action_space.get_all_possible_tile_combinations()}
+
+        q_table = {'11111111111100': t, '11111100': t}
 
         # for each binary representation of the Shut The Box game tiles, generate states accordingly
         for state_binary_representation in states_in_binary:
@@ -181,6 +185,8 @@ class QTable:
                 q_table[state_string] = {QTable.action_list_to_string(action=action): 0.0
                                          for action in actions_for_roll_sum}
 
+        # [print(e) for e in q_table]
+        # exit()
         return q_table
 
     # converts an action list to an action string.
