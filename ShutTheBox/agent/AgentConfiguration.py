@@ -14,11 +14,14 @@ ALPHA = 0.01
 # discount factor
 GAMMA = 0.90
 
-EPOCH_LENGTH = 10
+# number of episodes in a single epoch
+EPOCH_LENGTH = 10000
 
+# how frequently we print the best episode so far
 PRINT_FREQUENCY = 1000
 
 
+# function to update our epsilon-greedy next_action function
 def epsilon_func(e):
     return 5 / np.sqrt(e)
 

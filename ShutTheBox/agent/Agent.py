@@ -13,8 +13,9 @@ import shut_the_box_env.envs.ShutTheBoxEnv
 
 # Our decision making entity
 class Agent:
-    def __init__(self, json_file=None):
+    def __init__(self, json_file=None, print=True):
         self.env = gym.make('shut_the_box_env-v0')
+        self.print = print
 
         if json_file is None:
             self.q_table = QTable.build(self.env)
@@ -112,7 +113,7 @@ class Agent:
             # increment episodes and set a new epsilon for next episode
             episode += 1
             # epsilon = 100 / np.sqrt(episode + 1)
-            epsilon = 2 / np.sqrt(episode)
+            epsilon = agnt_config.epsilon_func(episode)
 
             # perform an experiment and grab stats about how the agent performed
             reward, print_string, win = self.run_single_episode(episode_number=episode, epsilon=epsilon)
@@ -131,13 +132,13 @@ class Agent:
 
             win_ratio = number_wins / episode
 
-        # build a print string to output our performance so far
-        s = PrintStrings.build_epoch_string(epoch=0,
-                                            epoch_wins=number_wins,
-                                            epoch_win_ratio=win_ratio,
-                                            epsilon=epsilon)
-
-        print(best_episode + '\n' + s + '\n')
+        if self.print:
+            # build a print string to output our performance so far
+            s = PrintStrings.build_epoch_string(epoch=0,
+                                                epoch_wins=number_wins,
+                                                epoch_win_ratio=win_ratio,
+                                                epsilon=epsilon)
+            print(best_episode + '\n' + s + '\n')
         return win_ratio
 
 
